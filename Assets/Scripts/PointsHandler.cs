@@ -7,12 +7,31 @@ public class PointsHandler : NetworkBehaviour
     private GameObject LeftPlayerPoints;
     private GameObject RightPlayerPoints;
 
-
-    //Problem is : cannot sync static vars
-    [SyncVar] 
-    public static int pointsLeft;
     [SyncVar]
-    public static int pointsRight;
+    public int pointsLeft;
+    [SyncVar]
+    public int pointsRight;
+
+    [ClientRpc]
+    public void RpcIncreasePointsLeft()
+    {
+        pointsLeft++;
+    }
+    [ClientRpc]
+    public void RpcIncreasePointsRight()
+    {
+        pointsRight++;
+    }
+    public int GetPointsLeft()
+    {
+        return pointsLeft;
+    }
+    public int GetPointsRight()
+    {
+        return pointsRight;
+    }
+
+
 
     // Start is called before the first frame update
     void Start()

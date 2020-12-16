@@ -6,7 +6,12 @@ using UnityEngine.Networking;
 public class NetworkController : NetworkManager
 {
     public static NetworkConnection connection;
-    
+    public BallController ballController;
+    private void Start()
+    {
+       
+    }
+
     public override void OnServerConnect(NetworkConnection Conn)
     {
         //Assigning our static connection
@@ -15,7 +20,9 @@ public class NetworkController : NetworkManager
         //Only moves ball when second player connects
         if (Conn.hostId >= 0)
         {
-            BallController.MoveBall();
+            ballController = GameObject.Find("Ball").GetComponent<BallController>();
+            if(ballController.isServer)
+                ballController.CmdMoveBall();
         }
     }
 }

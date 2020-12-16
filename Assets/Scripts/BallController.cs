@@ -1,17 +1,21 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class BallController : MonoBehaviour
+public class BallController : NetworkBehaviour
 {
+
+    PointsHandler pointHandler;
+
     private static float speed;
     private static Rigidbody2D rb;
     private const float waitTime = 1.0f;
-
 
     private int maxPoints = 5;
 
     // Start is called before the first frame update
     void Start()
     {
+        pointHandler = GameObject.Find("PointsCanvas").GetComponent<PointsHandler>();
         rb = this.GetComponent<Rigidbody2D>();
         // Reset ball speed to normal when respawning
         speed = 50f;
@@ -19,16 +23,17 @@ public class BallController : MonoBehaviour
         // Don't move the ball
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-        if(NetworkController.connection.hostId >= 0) //If this is our second connection
+        if(NetworkController.connection.hostId >= 0 && isServer) //If this is our second connection
         {
             Debug.Log("Moving ball inside of the ball controller...");
-            MoveBall();
+            CmdMoveBall();
         }
        
     }
 
     // Function to move the ball by giving it an initial force
-    public static void MoveBall()
+    [Command]
+    public void CmdMoveBall()
     {
         Debug.Log("Moving ball...");
        rb.velocity = Vector2.right * speed;
@@ -53,19 +58,19 @@ public class BallController : MonoBehaviour
         // If the ball scores a point on the right side, add a point to the right player
         else if (name == "RightPointCounter")
         {
-            PointsHandler.pointsLeft++;
+            pointHandler.RpcIncreasePointsLeft();
             // End game at max points points
-            if (PointsHandler.pointsLeft == maxPoints) FindObjectOfType<WinnerScreenController>().EndGame("Left Player");
+            if (pointHandler.GetPointsLeft() == maxPoints) FindObjectOfType<WinnerScreenController>().RpcEndGame("Left Player");
 
             ResetBall();
         }
 
-        // If the ball scores a point on the left side, add a point to the left player
+        // If the ball scores a point on the left side, add a point to the left player  //Client RPC
         else if (name == "LeftPointCounter")
         {
-            PointsHandler.pointsRight++;
+            pointHandler.RpcIncreasePointsRight();
             // End game at max points points
-            if (PointsHandler.pointsRight == maxPoints) FindObjectOfType<WinnerScreenController>().EndGame("Right Player");
+            if (pointHandler.GetPointsRight() == maxPoints) FindObjectOfType<WinnerScreenController>().RpcEndGame("Right Player");
 
             ResetBall();
         }

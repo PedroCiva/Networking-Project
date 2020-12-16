@@ -18,7 +18,7 @@ public class PlayerController : NetworkBehaviour
     void Start()
     {
         movementSpeed = 50f;
-
+        
        // rightPlayer = GameObject.Find("RightPlayer");
        // leftPlayer = GameObject.Find("LeftPlayer");
     }

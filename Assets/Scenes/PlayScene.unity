@@ -757,6 +757,7 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
+  ballController: {fileID: 0}
 --- !u!4 &553614580
 Transform:
   m_ObjectHideFlags: 0
@@ -1707,6 +1708,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ebdab87a4455e34a9b7b06fb816518e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pointsLeft: 0
+  pointsRight: 0
 --- !u!114 &834139079
 MonoBehaviour:
   m_ObjectHideFlags: 0
